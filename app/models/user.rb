@@ -30,7 +30,8 @@ class User < ActiveRecord::Base
 
   # Capital One
   def ensure_co_credentials
-    (co_user_id && co_authentication_token) || get_co_credentials!
+    return true if co_user_id && co_authentication_token)
+    get_co_credentials!
   end
 
   def get_co_credentials!
