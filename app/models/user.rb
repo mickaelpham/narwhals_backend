@@ -61,14 +61,14 @@ class User < ActiveRecord::Base
 
       transactions.create({
         co_transaction_id: t['transaction-id'],
-        co_account_id: t['account-id'],
-        merchant: t['merchant'],
-        raw_merchant: t['raw-merchant'],
-        co_account_id: t['account-id'],
-        is_pending: t['is-pending'],
-        transaction_time: Date.parse(t['transaction-time']),
-        categorization: t['categorization'],
-        amount: t['amount']
+        co_account_id:     t['account-id'],
+        merchant:          t['merchant'],
+        raw_merchant:      t['raw-merchant'],
+        co_account_id:     t['account-id'],
+        is_pending:        t['is-pending'],
+        transaction_time:  Date.parse(t['transaction-time']),
+        categorization:    t['categorization'],
+        amount:            t['amount']
       })
     end
   end

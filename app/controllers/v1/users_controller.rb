@@ -5,10 +5,9 @@ module V1
 
       if user.save
         login!(user)
-        render json: user, stats: :created
+        render json: user, status: :created
       else
-        puts user.errors.full_messages
-        render json: { error: { message: "Invalid Capitol One credentials" } }, stats: :unprocessable_entity
+        render json: { error: { message: "Invalid Capitol One credentials" } }, status: :unprocessable_entity
       end
     end
 
