@@ -3,7 +3,7 @@ module V1
     def create
       user = User.new(user_params)
 
-      if user.has_capital_one_token? && user.save
+      if user.has_capital_one_access_token? && user.save
         login!(user)
         render json: user, stats: :created
       else
