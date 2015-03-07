@@ -42,7 +42,7 @@ gem 'puma'
 gem 'dotenv-rails', :groups => [:development, :test]
 
 # Use the capital one client ruby gem
-# gem 'capitalone_client', git: "https://#{ENV['GITHUB_TOKEN']}:x-oauth-basic@github.com/mickaelpham/capitalone_client.git"
+gem 'capitalone_client', git: "https://#{ENV['GITHUB_TOKEN']}:x-oauth-basic@github.com/mickaelpham/capitalone_client.git"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
