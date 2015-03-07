@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   after_initialize :ensure_session_token, :ensure_co_credentials
 
   has_many :transactions
+  has_many :goals
 
   # User
   def self.find_by_credentials(email, password)
@@ -34,7 +35,7 @@ class User < ActiveRecord::Base
 
   def get_co_credentials!
     resp = CapitalOneClient.login(email: email, password: password)
-    return false if resp.error == 'some-error'
+    return false unless resp.error == 'no-error'
     self.co_user_id, self.co_authentication_token = resp.uid, resp.token
     self.save
   end
@@ -68,5 +69,9 @@ class User < ActiveRecord::Base
         categorization: t['categorization']
       })
     end
+  end
+
+  def fetch_projected_transactions(month, year)
+    session.projected_transactions(month: month, year: year)
   end
 end
