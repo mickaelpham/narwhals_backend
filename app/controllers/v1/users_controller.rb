@@ -5,9 +5,9 @@ module V1
 
       if user.save
         login!(user)
-        render json: user, stats: :created
+        render json: user, status: :created
       else
-        render json: { error: { message: "Invalid login credentials" } }, stats: :unprocessable_entity
+        render json: { error: { message: "Invalid login credentials" } }, status: :unprocessable_entity
       end
     end
 
