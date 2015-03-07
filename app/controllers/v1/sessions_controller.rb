@@ -12,8 +12,8 @@ module V1
     end
 
     def destroy
-      logout!
-      render json: {}
+      logout! if current_user
+      render json: {}, status: :ok
     end
 
     private
