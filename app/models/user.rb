@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   end
 
   # Capital One
-  def has_capital_one_token?
+  def has_capital_one_access_token?
   	# TODO CHECK IF CAP ONE LOGIN IS OKAY
   	true
   end
