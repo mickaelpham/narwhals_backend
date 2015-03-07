@@ -1,0 +1,2 @@
+# Simply load the environment variable
+source .env
