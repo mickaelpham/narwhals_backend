@@ -34,3 +34,6 @@ try "Copying DOTENV file" "test -e .env || cp .env.sample .env"
 
 # Simply load the environment variable
 try "Loading DOTENV file" "source .env"
+
+echo
+bold "All systems are go!"
