@@ -6,6 +6,8 @@ module V1
       if user.save
         login!(user)
         render json: user, status: :created
+      elsif user.errors[:email] == ["has already been taken"]
+        render json: { error: { messages: ["Capitol One account already exists"] } }, status: :unprocessable_entity
       else
         render json: { error: { messages: ["Invalid Capitol One credentials"] } }, status: :unprocessable_entity
       end
