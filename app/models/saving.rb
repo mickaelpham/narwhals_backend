@@ -6,7 +6,7 @@ class Saving < ActiveRecord::Base
   NUM_YEAR          = 10
 
   def cost_projection
-    compound monthly_cost
+    compound(monthly_cost, time_period, frequency)
   end
 
   def savings_projection
@@ -19,7 +19,7 @@ class Saving < ActiveRecord::Base
     self.respond_to?(:preview_cost) ? preview_cost : co_transaction.amount
   end
 
-  def monthly_cost
+  def monthly_cost(time_period, frequency)
     case time_period
     when 'week'
       frequency * 52 / 12 * cost
@@ -27,6 +27,20 @@ class Saving < ActiveRecord::Base
       frequency * cost
     when 'year'
       frequency / 12 * cost
+    end
+  end
+
+  # For the given initial frequency, returns an array of reduced frequencies
+  def lowered_frequency
+    return { time_period.to_sym => (frequency - 1).downto(1).to_a } if frequency > 1
+
+    case time_period
+    when 'week'
+      { month: 3.downto(1).to_a }
+    when 'month'
+      { year: 11.downto(1).to_a }
+    when 'year'
+      { year: [1] } # absolute lowest frequency: once a year
     end
   end
 
