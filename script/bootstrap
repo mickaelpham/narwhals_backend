@@ -1,2 +1,36 @@
+#!/bin/sh
+
+set -e
+
+heading() {
+  echo "$1... \c";
+}
+
+bold() {
+  echo "\033[1m$1\033[0m"
+}
+
+pass() {
+  bold "DONE"
+}
+
+fail_and_exit() {
+  fail
+  exit -1
+}
+
+try() {
+  heading "$1"
+  if eval "$2"
+  then
+    pass
+  else
+    fail_and_exit
+  fi
+}
+
+# Set up the dot env if not present
+try "Copying DOTENV file" "test -e .env || cp .env.sample .env"
+
 # Simply load the environment variable
-source .env
+try "Loading DOTENV file" "source .env"
