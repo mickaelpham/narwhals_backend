@@ -3,7 +3,7 @@ class CreateGoals < ActiveRecord::Migration
     create_table :goals do |t|
       t.integer  :user_id, null: false, index: true
       t.string   :title, null: false
-      t.string   :category
+      t.string   :categorization
 
       t.timestamps null: false
     end
