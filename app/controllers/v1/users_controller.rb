@@ -7,7 +7,7 @@ module V1
         login!(user)
         render json: user, status: :created
       else
-        render json: { error: { message: "Invalid Capitol One credentials" } }, status: :unprocessable_entity
+        render json: { error: { messages: ["Invalid Capitol One credentials"] } }, status: :unprocessable_entity
       end
     end
 
