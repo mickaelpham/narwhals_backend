@@ -1,6 +1,6 @@
 class Transaction < ActiveRecord::Base
   belongs_to :user
-  has_one :saving
+  has_one :saving, :foreign_key => 'co_transaction_id'
   delegate :session, to: :user
 
   def similar_transactions

@@ -1,4 +1,6 @@
 class Saving < ActiveRecord::Base
+  belongs_to :co_transaction, class_name: 'Transaction'
+
   private
 
   def cost_projection
