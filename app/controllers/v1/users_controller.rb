@@ -3,10 +3,12 @@ module V1
     def create
       user = User.new(user_params)
 
-      if user.save
+      if user.has_capital_one_token? && user.save
+        login!(user)
         render json: user, stats: :created
       else
-        render json: { error: { message: user.errors.full_messages } }, stats: :unprocessable_entity
+        puts user.errors.full_messages
+        render json: { error: { message: "Invalid login credentials" } }, stats: :unprocessable_entity
       end
     end
 
