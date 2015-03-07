@@ -9,7 +9,7 @@ module V1
       if saving.save
         render json: saving, status: :created
       else
-        render json: { error: { message: 'Invalid transaction or calculation' } }, status: :unprocessable_entity
+        render json: { error: { messages: ['Invalid transaction or calculation'] } }, status: :unprocessable_entity
       end
     end
 
@@ -19,7 +19,7 @@ module V1
       if saving
         render json: saving
       else
-        render json: { error: { message: 'Could not retrieve saving' } }, status: :unprocessable_entity
+        render json: { error: { messages: ['Could not retrieve saving'] } }, status: :unprocessable_entity
       end
     end
 
