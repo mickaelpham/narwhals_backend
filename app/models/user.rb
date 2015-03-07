@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
-
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true
   validates :session_token, presence: true, uniqueness: true
-  after_initialize :ensure_session_token
+  after_initialize :ensure_session_token, :ensure_co_credentials
+
+  has_many :transactions
 
   # User
   def self.find_by_credentials(email, password)
@@ -19,7 +20,7 @@ class User < ActiveRecord::Base
   def reset_session_token!
     self.session_token = self.class.generate_session_token
     self.save!
-    self.session_token
+    session_token
   end
 
   def ensure_session_token
@@ -27,8 +28,45 @@ class User < ActiveRecord::Base
   end
 
   # Capital One
-  def has_capital_one_access_token?
-    # TODO CHECK IF CAP ONE LOGIN IS OKAY
-    true
+  def ensure_co_credentials
+    (co_user_id && co_authentication_token) || get_co_credentials!
+  end
+
+  def get_co_credentials!
+    resp = CapitalOneClient.login(email: email, password: password)
+    return false if resp.error == 'some-error'
+    self.co_user_id, self.co_authentication_token = resp.uid, resp.token
+    self.save
+  end
+
+  def co_credentials
+    {
+      user_id:              co_user_id,
+      authentication_token: co_authentication_token,
+      api_token:            'HackathonApiToken'
+    }
+  end
+
+  def session
+    @session ||= CapitalOneClient.session(co_credentials)
+  end
+
+  def fetch_transactions
+    fetched_co_transaction_ids = transactions.pluck(:co_transaction_id)
+
+    session.transactions.reverse.each do |t|
+      next if fetched_co_transaction_ids.include? t['transaction-id']
+
+      transactions.create({
+        co_transaction_id: t['transaction-id'],
+        co_account_id: t['account-id'],
+        merchant: t['merchant'],
+        raw_merchant: t['raw-merchant'],
+        co_account_id: t['account-id'],
+        is_pending: t['is-pending'],
+        transaction_time: Date.parse(t['transaction-time']),
+        categorization: t['categorization']
+      })
+    end
   end
 end

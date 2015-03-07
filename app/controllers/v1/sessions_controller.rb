@@ -5,6 +5,7 @@ module V1
 
       if user
         login!(user)
+        puts user.fetch_transactions
         render json: user, status: :ok
       else
         render json: { error: { message: "Invalud user credentials" } }, status: :unprocessable_entity
