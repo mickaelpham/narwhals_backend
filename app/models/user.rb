@@ -67,7 +67,8 @@ class User < ActiveRecord::Base
         co_account_id: t['account-id'],
         is_pending: t['is-pending'],
         transaction_time: Date.parse(t['transaction-time']),
-        categorization: t['categorization']
+        categorization: t['categorization'],
+        amount: t['amount']
       })
     end
   end
