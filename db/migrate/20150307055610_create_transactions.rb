@@ -2,9 +2,10 @@ class CreateTransactions < ActiveRecord::Migration
   def change
     create_table :transactions do |t|
     	t.integer  :user_id, null: false, index: true
-    	t.string   :transaction_id
-    	t.string   :capital_one_account_id
-    	t.string   :raw_merchant
+    	t.string   :co_transaction_id
+    	t.string   :co_account_id
+      t.string   :merchant
+      t.string   :raw_merchant
     	t.string   :merchant
     	t.boolean  :is_pending
     	t.date     :transaction_time
