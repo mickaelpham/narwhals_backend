@@ -1,5 +1,6 @@
 class Transaction < ActiveRecord::Base
   belongs_to :user
+  has_one :saving
   delegate :session, to: :user
 
   def similar_transactions
