@@ -8,7 +8,7 @@ module V1
         puts user.fetch_transactions
         render json: user, status: :ok
       else
-        render json: { error: { message: "Invalud user credentials" } }, status: :unprocessable_entity
+        render json: { error: { messages: ["Invalid user credentials"] } }, status: :unprocessable_entity
       end
     end
 

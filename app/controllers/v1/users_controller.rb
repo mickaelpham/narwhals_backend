@@ -8,7 +8,7 @@ module V1
         render json: user, stats: :created
       else
         puts user.errors.full_messages
-        render json: { error: { message: "Invalid Capitol One credentials" } }, stats: :unprocessable_entity
+        render json: { error: { messages: ["Invalid Capitol One credentials"] } }, stats: :unprocessable_entity
       end
     end
 

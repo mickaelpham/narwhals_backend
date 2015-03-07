@@ -8,7 +8,7 @@ module V1
       if goal.save
         render json: goal, stats: :created
       else
-        render json: { error: { message: "Invalid login credentials" } }, stats: :unprocessable_entity
+        render json: { error: { messages: [goal.errors.full_messages] } }, stats: :unprocessable_entity
       end
     end
 
