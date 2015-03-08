@@ -1,10 +1,10 @@
 module V1
   class TransactionsController < V1Controller
     before_action :ensure_logged_in
-    
+
     def index
       current_user.fetch_transactions
-      transactions = current_user.transactions.where(query_params)
+      transactions = current_user.transactions.debit.where(query_params)
 
       render json: transactions, status: :ok
     end
