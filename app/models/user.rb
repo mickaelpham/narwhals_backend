@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   validates :session_token, presence: true, uniqueness: true
   after_initialize :ensure_session_token, :ensure_co_credentials
 
-  has_many :transactions
+  has_many :transactions, -> { order('transaction_time DESC') }
   has_many :goals
 
   # User
