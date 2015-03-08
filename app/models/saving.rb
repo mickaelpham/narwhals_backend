@@ -5,24 +5,36 @@ class Saving < ActiveRecord::Base
   INTEREST_RATE     = 0.10
   NUM_YEAR          = 10
 
+  KEEP_SAME_PERIOD    = 3
+  REDUCED_FREQUENCIES = 4
+
   def cost_projection
     @cost_projection ||= compound(monthly_cost(time_period, frequency)).to_i
   end
 
   def savings_projection
     result = []
-    time_period = lowered_frequency[:new_period]
 
-    lowered_frequency[:new_frequencies].each do |frequency|
-      new_cost = compound(monthly_cost(time_period, frequency))
+    lowered_frequencies.each do |lowered_frequency|
+      new_time_period = lowered_frequency[:time_period]
+      new_frequency   = lowered_frequency[:frequency]
+      new_cost        = compound(monthly_cost(new_time_period, new_frequency))
 
       result << {
-        frequency:   frequency,
-        time_period: time_period,
+        frequency:   new_frequency,
+        time_period: new_time_period,
         cost:        new_cost.to_i,
         saving:      (new_cost - cost_projection).to_i
       }
     end
+
+    # Always add the frequency 0 as the last option
+    result << {
+      frequency:   0,
+      time_period: 'never',
+      cost:        0,
+      saving:      -cost_projection
+    }
 
     result
   end
@@ -36,25 +48,35 @@ class Saving < ActiveRecord::Base
   def monthly_cost(time_period, frequency)
     case time_period
     when 'week'
-      frequency * 52 / 12 * cost
+      frequency * 52.0 / 12 * cost
     when 'month'
       frequency * cost
     when 'year'
-      frequency / 12 * cost
+      frequency / 12.0 * cost
+    when 'ten_years'
+      frequency / 120.0 * cost
     end
   end
 
   # For the given initial frequency, returns an array of reduced frequencies
-  def lowered_frequency
-    return { new_period: time_period, new_frequencies: (frequency - 1).downto(1).to_a } if frequency > 1
+  def lowered_frequencies
+    result  = []
+    current = { frequency: frequency, time_period: time_period }
 
-    case time_period
+    REDUCED_FREQUENCIES.times { current = lower_frequency(current); result << current }
+    result
+  end
+
+  def lower_frequency(current)
+    return { frequency: current[:frequency] - 1, time_period: current[:time_period]} if current[:frequency] > 1
+
+    case current[:time_period]
     when 'week'
-      { new_period: 'month', new_frequencies: 3.downto(1).to_a }
+      { frequency: 3, time_period: 'month' }
     when 'month'
-      { new_period: 'year', new_frequencies: 11.downto(1).to_a }
+      { frequency: 11, time_period: 'year' }
     when 'year'
-      { new_period: 'year', new_frequencies: [1] } # absolute lowest frequency: once a year
+      { frequency: 9, time_period: 'ten_years' }
     end
   end
 
